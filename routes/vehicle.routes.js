@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Vehicle = require('../models/vehicle.model'); // Ajusta la ruta según tu estructura
+const Vehicle = require('../models/vehicle.model.js'); // Ajusta la ruta según tu estructura
 
 // --- RUTAS CRUD PARA VEHÍCULOS ---
 
