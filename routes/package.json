@@ -1,0 +1,19 @@
+{
+  "name": "parking-system",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de parqueadero",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+ "dependencies": {
+  "bcryptjs": "^2.4.3",
+  "cloudinary": "^1.40.0",
+  "cookie-parser": "^1.4.6",
+  "express-fileupload": "^1.4.0",
+  "jsonwebtoken": "^9.0.2",
+  "multer": "^1.4.5-lts.1"
+}
+  
+}
