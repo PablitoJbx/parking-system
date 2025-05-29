@@ -1,42 +1,38 @@
-require('dotenv').config();
-const express = require('express'); // <-- Solo una declaración
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors'); // Opcional para frontend
+require('dotenv').config(); // Para variables de entorno
 
-// Inicializar aplicación
+// Inicializar la app
 const app = express();
 
-// Middlewares básicos
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+// --- MIDDLEWARE ---
+app.use(express.json()); // Para parsear req.body como JSON
+app.use(express.urlencoded({ extended: true })); // Para formularios HTML
+app.use(cors()); // Habilita CORS si tienes frontend
 
-// Configurar archivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
+// Conexión a MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/parking-system', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('✅ Conectado a MongoDB'))
+.catch(err => console.error('❌ Error de conexión a MongoDB:', err));
 
-// Rutas básicas
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'API funcionando' });
-});
+// --- IMPORTAR RUTAS ---
+const vehicleRoutes = require('./routes/vehicle.routes');
 
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
+// --- MONTAR RUTAS ---
+app.use('/api/vehicles', vehicleRoutes); // Ejemplo: POST /api/vehicles
 
-app.get('/', (req, res) => {
-  res.redirect('/login');
-});
-
-// Manejo de errores
+// --- MANEJO DE ERRORES ---
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Error interno del servidor');
+  res.status(500).json({ error: 'Algo salió mal en el servidor' });
 });
 
-// Iniciar servidor
-const PORT = process.env.PORT || 5000;
+// --- INICIAR SERVIDOR ---
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
